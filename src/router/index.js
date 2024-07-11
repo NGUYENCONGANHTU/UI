@@ -4,6 +4,8 @@ import Contact from "@/views/Contact.vue";
 import Policy from "@/views/Policy.vue";
 import About from "@/views/About.vue";
 import Product from "@/views/Product.vue";
+import ShoppingCart from "@/views/ShoppingCart.vue";
+import OrderForm from "@/components/Order/OrderForm.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -31,6 +33,16 @@ const router = createRouter({
       path: "/product",
       name: "Product",
       component: Product,
+    },
+    {
+      path: "/shoppingCart",
+      name: "ShoppingCart",
+      component: ShoppingCart,
+    },
+    {
+      path: "/orderForm",
+      name: "OrderForm",
+      component: OrderForm,
     },
   ],
 });

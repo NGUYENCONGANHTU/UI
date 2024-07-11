@@ -2,7 +2,7 @@
   <div class="title mt-5">
     <h2>DANH SÁCH SẢN PHẨM</h2>
   </div>
-  <div class="container">
+  <div class="container mt-5">
     <div class="row d-flex justify-content-center">
       <div class="col-lg-3 col-md-4 col-sm-12 mb-4">
         <a href="" class="card-product">
