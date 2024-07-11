@@ -44,6 +44,9 @@ const router = createRouter({
       name: "OrderForm",
       component: OrderForm,
     },
+    {
+      path: "/trademark_detail_product/:id"
+    }
   ],
 });
 

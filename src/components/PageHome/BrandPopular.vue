@@ -2,22 +2,30 @@
   <div class="brand-popular container">
     <h3 class="brand-title">THƯƠNG HIỆU PHỐ BIẾN</h3>
     <div class="brand-items">
-      <div class="item item1">
-        <a href="" class="title-items">Apple</a>
-      </div>
-      <div class="item item2">
-        <a href="" class="title-items">SamSung</a>
-      </div>
-      <div class="item item3">
-        <a href="" class="title-items">Xiaomi</a>
-      </div>
-      <div class="item item4">
-        <a href="" class="title-items">Oppo</a>
+      <div v-for="(item, index) in data" :key="index">
+        <div :class="`item item${index + 1}`">
+          <router-link :to="`/trademark_detail_product/${item.id}`" class="title-items">{{  item.name }}</router-link>
+        </div>
       </div>
     </div>
   </div>
 </template>
-<script setup></script>
+<script setup>
+import { defineEmits, ref, defineProps, onMounted ,computed} from "vue";
+import { useStore } from "vuex";
+
+// declare store
+const store = useStore();
+
+const data = computed(() => store.getters["trademark/dataTrademark"]);
+
+onMounted( async () => {
+  const query = {
+    limit: 4
+  }
+  await store.dispatch("trademark/getAll",{ params: query })
+})
+</script>
 <style scoped>
 .brand-popular {
   display: flex;
