@@ -76,7 +76,7 @@ export class APIService {
         axios.interceptors.request.use(
             async (config) => {
                 // Catch request before sending
-                const accessToken = Cookies.get("accessToken");
+                const accessToken = Cookies.get("user_info_token");
                 if (accessToken) {
                     config.headers.Authorization = `Bearer ${accessToken}`;
                 }
@@ -94,9 +94,9 @@ export class APIService {
             (error) => {
                 if(error.response.status === 401){
                     // reset token
-                    this.router.push('/login').then(() => {
-                        location.reload()
-                    });
+                    const accessToken = Cookies.get("user_info_token");
+                    const newData = this.post(`api/users/user_authenticate/refreshToken`, accessToken)
+                    Cookies.set('user_info_token',newData.data.data.token)
                 }else if (error.response.status === 403){
                     // to => page 403
                 }

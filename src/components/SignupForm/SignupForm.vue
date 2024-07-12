@@ -82,12 +82,18 @@ const model = reactive({
 });
 
 const userRegister = async () => {
-  await store.dispatch("auth/register", model)
-   router.push("/loginForm").then(() => {
-      toast.success(
-        `status: ${'200'}: Tạo tài khoản người dùng thành công !!`
+  try {
+    await store.dispatch("auth/register", model)
+    router.push("/loginForm").then(() => {
+        toast.success(
+          `status: ${'200'}: Tạo tài khoản người dùng thành công !!`
+        );
+      });
+  } catch (error) {
+    toast.error(
+        `status: ${'500'}: Tạo tài khoản người dùng không thành công !!`
       );
-    });
+  }
 }
 
 </script>

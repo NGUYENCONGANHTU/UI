@@ -1,5 +1,7 @@
 import { AuthService } from "@/service/auth.service";
-
+import Cookies from 'js-cookie';
+import { Constants } from "@/constants/constants";
+import { UserLoginInfo } from '@/cheetah-core/mixins/user-login-info';
 // declare class AuthService
 const authService = new AuthService();
 
@@ -39,11 +41,12 @@ const userStore = {
   },
 
   actions: {
-    async userInfo({ commit }, { id }) {
+
+    async userInfo({ commit }, id) {
       try {
         commit("isLoading", true);
         const response = await authService.userInfo(
-          `/api/users/user_authenticate/user_info/${id}`
+          `/api/users/user_authenticate/user_info/` + id
         );
         if (response) {
           commit("setCakeData", [response]);
@@ -52,6 +55,38 @@ const userStore = {
       } catch (error) {
         commit("isLoading", true);
         throw new Error(error.message);
+      }
+    },
+
+    async login({ commit }, params) {
+      try {
+        commit('isLoading', true)
+        const response = await authService.login('/api/users/user_authenticate/userLogin', params)
+        if (response && response.token) {
+          // Set token cookie
+          Cookies.set(Constants.tokenUser, response.token);
+          // save user info localStorage
+          UserLoginInfo.methods.setUser(response)
+          commit('isLoading', false);
+        } else {
+          throw new Error('Invalid response or token missing');
+        }
+      } catch (error) {
+        commit('isLoading', true)
+        throw new Error(error.message)
+      }
+    },
+
+    async logout({ commit }) {
+      try {
+        commit('isLoading', true)
+        await authService.logout('/api/users/user_authenticate/logout')
+        Cookies.remove(Constants.tokenUser);
+        UserLoginInfo.methods.removeUser()
+        commit('isLoading', false)
+      } catch (error) {
+        commit('isLoading', true)
+        throw new Error(error.message)
       }
     },
 
@@ -90,21 +125,21 @@ const userStore = {
     },
 
     async refreshToken({ commit }, params) {
-        try {
-          commit("isLoading", true);
-          const response = await authService.refreshToken(
-            `/api/users/user_authenticate/refreshToken`,
-            params
-          );
-          if (response) {
-            commit("updateCakeUser", response);
-            commit("isLoading", false);
-          }
-        } catch (error) {
-          commit("isLoading", true);
-          throw new Error(error.message);
+      try {
+        commit("isLoading", true);
+        const response = await authService.refreshToken(
+          `/api/users/user_authenticate/refreshToken`,
+          params
+        );
+        if (response) {
+          commit("updateCakeUser", response);
+          commit("isLoading", false);
         }
-      },
+      } catch (error) {
+        commit("isLoading", true);
+        throw new Error(error.message);
+      }
+    },
 
     // async deleteUser({ commit }, id) {
     //   try {

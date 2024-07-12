@@ -9,6 +9,10 @@ export const UserLoginInfo = {
       localStorage.setItem(Constants.userInfo, JSON.stringify(user));
     },
 
+    setUser (user) {
+      localStorage.setItem(Constants.me, JSON.stringify(user));
+    },
+
     /**
      * Get User login from local storage
      */
@@ -16,11 +20,19 @@ export const UserLoginInfo = {
       return JSON.parse(localStorage.getItem(Constants.userInfo))
     },
 
+    getUser () {
+      return JSON.parse(localStorage.getItem(Constants.me))
+    },
+
     /**
      * Remove User login from local storage
      */
     removeUserLogin () {
       localStorage.removeItem(Constants.userInfo);
+    },
+
+    removeUser() {
+      localStorage.removeItem(Constants.me);
     },
 
     /**

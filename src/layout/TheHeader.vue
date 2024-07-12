@@ -1,5 +1,52 @@
 <script setup>
+import {
+  defineComponent,
+  ref,
+  reactive,
+  watchEffect,
+  toRefs,
+  onMounted,
+  computed,
+} from "vue";
 import logo from "@/assets/logo/logo-Ci.png";
+import { UserLoginInfo } from '@/cheetah-core/mixins/user-login-info';
+import { Constants } from "@/constants/constants";
+import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
+import { toast } from "vue3-toastify";
+import { useStore } from "vuex";
+
+const store = useStore();
+const router = useRouter();
+const route = useRoute();
+const userInfo = UserLoginInfo.methods.getUser(Constants.me);
+
+const user = computed(() =>
+  store.getters["auth/getUserById"](userInfo ? userInfo.id : 0)
+);
+
+const userLogout = async () => {
+  try {
+    await store.dispatch("auth/logout")
+      router.push("/loginForm").then(() => {
+        toast.success(
+          `status: ${'200'}: Đăng xuất tài khoản thành công !!`
+        );
+      });
+  } catch (error) {
+      toast.error(
+        `status: ${'500'}: Đăng xuất tài khoản không công !!`
+      );
+  }
+}
+
+onMounted( async () => {
+  if(userInfo) {
+    store.dispatch("auth/userInfo", userInfo.id )
+  }
+ 
+})
+
 </script>
 <template>
   <div class="container">
@@ -76,24 +123,29 @@ import logo from "@/assets/logo/logo-Ci.png";
           aria-expanded="false"
         >
           <img
+            v-show="!userInfo"
             src="https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
             alt=""
             width="28"
             height="28"
             class="avatar"
           />
+          {{ user ? user?.user_name : '' }}
         </a>
         <ul class="dropdown-menu dropdown-menu-light text-small shadow">
           <li>
-            <a class="dropdown-item" href="#">Đăng Nhập</a>
+            <a v-show="!user" class="dropdown-item" href="#">Đăng Nhập</a>
           </li>
           <li>
             <router-link
-              ><a class="dropdown-item" href="#">Đăng Kí</a></router-link
+              ><a v-show="!user" class="dropdown-item" href="#">Đăng Ký</a></router-link
             >
           </li>
           <li>
-            <a class="dropdown-item" href="#">Đăng xuất</a>
+            <a  v-show="user" class="dropdown-item" @click="userLogout" href="#">Đăng xuất</a>
+          </li>
+          <li>
+            <a v-show="user" class="dropdown-item" href="#">profile</a>
           </li>
         </ul>
       </div>
@@ -121,7 +173,7 @@ import logo from "@/assets/logo/logo-Ci.png";
   font-weight: bold;
 }
 .logo img {
-  width: 210px;
+  width: 160px;
 }
 .search-bar input {
   border-radius: 5px 0 0 5px;

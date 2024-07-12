@@ -1,29 +1,13 @@
 import { APIService } from "./api.service";
 import { URL_API } from "@/constants/env";
 
-export class AuthService extends APIService {
+export class CartService extends APIService {
 
     constructor() {
         super(URL_API)
     }
-
-    async userInfo(url) {
-        return this.get(`${url}`)
-        .then((response) => response?.data.data)
-        .catch((error) => {
-            throw error?.response?.data;
-        });
-    }
     
-    async login(url,data) {
-        return this.post(`${url}`,data)
-        .then((response) => response?.data.data)
-        .catch((error) => {
-            throw error?.response?.data;
-        });
-    }
-
-    async logout(url) {
+    async getCarts(url) {
         return this.get(`${url}`)
         .then((response) => response?.data.data)
         .catch((error) => {
@@ -31,7 +15,15 @@ export class AuthService extends APIService {
         });
     }
 
-    async refreshToken(url,data) {
+    async getCart(url) {
+        return this.get(`${url}`)
+        .then((response) => response?.data.data)
+        .catch((error) => {
+            throw error?.response?.data;
+        });
+    }
+
+    async addToCart(url, data) {
         return this.post(`${url}`,data)
         .then((response) => response?.data.data)
         .catch((error) => {
@@ -39,7 +31,7 @@ export class AuthService extends APIService {
         });
     }
 
-    async register(url,data) {
+    async updateCart(url, data) {
         return this.post(`${url}`,data)
         .then((response) => response?.data.data)
         .catch((error) => {
@@ -47,8 +39,8 @@ export class AuthService extends APIService {
         });
     }
 
-    async changePassword(url,data) {
-        return this.put(`${url}`,data)
+    async deleteCart(url) {
+        return this.delete(`${url}`)
         .then((response) => response?.data.data)
         .catch((error) => {
             throw error?.response?.data;

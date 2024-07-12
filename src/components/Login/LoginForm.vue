@@ -2,13 +2,14 @@
   <div class="container">
     <div class="main">
       <h1>Đăng nhập</h1>
-      <form class="mt-4">
-        <label for="first">Tên đăng nhập:</label>
+      <form @submit.prevent="userLogin" class="mt-4">
+        <label for="first">Email:</label>
         <input
           type="text"
           id="first"
           class="mt-3"
-          placeholder="Nhập tên người dùng"
+          v-model="model.email"
+          placeholder="Nhập tên email"
           required
         />
 
@@ -18,6 +19,7 @@
           id="password"
           class="mt-3"
           placeholder="Nhập mật khẩu"
+          v-model="model.password"
           required
         />
 
@@ -35,7 +37,50 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import {
+  defineComponent,
+  ref,
+  reactive,
+  watchEffect,
+  toRefs,
+  onMounted,
+  computed,
+} from "vue";
+
+import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
+import { toast } from "vue3-toastify";
+import { useStore } from "vuex";
+
+const store = useStore();
+const router = useRouter();
+const route = useRoute();
+
+const model = reactive({
+  email:"",
+  password: ""
+});
+
+const userLogin = async() => {
+  try {
+    await store.dispatch("auth/login", model)
+      router.push("/").then(() => {
+        toast.success(
+          `status: ${'200'}: Đăng nhập tài khoản thành công !!`
+        );
+        setTimeout(() => {
+          location.reload()
+        },3000)
+      });
+  } catch (error) {
+      toast.error(
+        `status: ${'500'}: Đăng nhập tài khoản không công !!`
+      );
+  }
+}
+
+</script>
 
 <style scoped>
 .container {

@@ -111,7 +111,7 @@
                   <i class="bi bi-plus-square"></i>
                 </button>
                 <input
-                  v-model="model.count"
+                  v-model="model.quantity"
                   type="number"
                   class="input-group w-25 mx-2 input_cart_base"
                 />
@@ -164,9 +164,11 @@ const route = useRoute();
 const pushIdAttributeIds = ref([]);
 
 const model = reactive({
-  count: 0,
-  attributeIds: pushIdAttributeIds.value,
+  quantity: 0,
+  productAttributeId: pushIdAttributeIds.value,
+  product_id: Number(route.params.id),
 });
+
 
 const dataDetail = computed(() =>
   store.getters["productRoot/getProductById"](Number(route.params.id))
@@ -183,16 +185,28 @@ const updateIdAttributeIds = (value) => {
   } else {
     pushIdAttributeIds.value.splice(index, 1);
   }
+  const productAttributeIdsString = pushIdAttributeIds.value.join(',');
+  model.productAttributeId = productAttributeIdsString;
 };
 
 const addToCart = async () => {
-   console.log(model);
+  try {
+    await store.dispatch("cart/createCart", model)
+      // router.push("/").then(() => {
+      //   toast.success(
+      //     `status: ${'200'}: Đăng nhập tài khoản thành công !!`
+      //   );
+      // });
+  } catch (error) {
+      toast.error(
+        `status: ${'500'}: Đăng nhập tài khoản không công !!`
+      );
+  }
 };
 
 const updateActiveTab = (id) => {
   const tabId = `pic-${id}`;
   const tabPane = document.querySelector(`#${tabId}`);
-  console.log(tabPane);
   if (tabPane) {
     tabPane.classList.add("active");
   }
