@@ -6,6 +6,14 @@ import About from "@/views/About.vue";
 import Product from "@/views/Product.vue";
 import ShoppingCart from "@/views/ShoppingCart.vue";
 import OrderForm from "@/components/Order/OrderForm.vue";
+import SignupForm from "@/components/SignupForm/SignupForm.vue";
+import LoginForm from "@/components/Login/LoginForm.vue";
+// import InfoCon from "@/components/Profile/SidebarProfile/SidebarProfile.vue";
+import InfoContent from "@/components/Profile/ContentProfile/InfoContent.vue";
+import OrderContent from "@/components/Profile/ContentProfile/OrderContent.vue";
+import ShoppingContent from "@/components/Profile/ContentProfile/ShoppingContent.vue";
+import ProductDetail from "@/components/ProductDetail/ProductDetail.vue";
+import Trademark from "@/components/PagaTrademark/Trademark.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -45,8 +53,40 @@ const router = createRouter({
       component: OrderForm,
     },
     {
-      path: "/trademark_detail_product/:id"
-    }
+      path: "/signupForm",
+      name: "SignupForm",
+      component: SignupForm,
+    },
+    {
+      path: "/loginForm",
+      name: "LoginForm",
+      component: LoginForm,
+    },
+    {
+      path: "/infoContent",
+      name: "InfoContent",
+      component: InfoContent,
+    },
+    {
+      path: "/orderContent",
+      name: "OrderContent",
+      component: OrderContent,
+    },
+    {
+      path: "/shoppingContent",
+      name: "ShoppingContent",
+      component: ShoppingContent,
+    },
+    {
+      path: "/productDetail",
+      name: "ProductDetail",
+      component: ProductDetail,
+    },
+    {
+      path: "/Trademark",
+      name: "Trademark",
+      component: Trademark,
+    },
   ],
 });
 
