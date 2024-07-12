@@ -7,25 +7,32 @@
           <div class="preview col-md-6">
             <div class="preview-pic tab-content">
               <div class="tab-pane active" :id="`pic-${dataDetail?.id}`">
-                <img :src="URL + '/' + dataDetail?.images " />
+                <img :src="URL + '/' + dataDetail?.images" />
               </div>
-              <div v-for="(item,index) in dataProductImage " :key="index" class="tab-pane" :id="`pic-${ index + 1}`">
+              <div
+                v-for="(item, index) in dataProductImage"
+                :key="index"
+                class="tab-pane"
+                :id="`pic-${index + 1}`"
+              >
                 <img :src="URL + '/' + item?.file_name" />
               </div>
             </div>
             <ul class="preview-thumbnail nav nav-tabs">
-
-              <li v-for="(item, index) in dataProductImage" :key="index" >
-                <a :data-target="`#pic-${item.id}`" :id="`#pic-${item.id}`" data-toggle="tab" @click="updateActiveTab(item.id)"
+              <li v-for="(item, index) in dataProductImage" :key="index">
+                <a
+                  :data-target="`#pic-${item.id}`"
+                  :id="`#pic-${item.id}`"
+                  data-toggle="tab"
+                  @click="updateActiveTab(item.id)"
                   ><img :src="URL + '/' + item?.file_name"
                 /></a>
               </li>
-              
             </ul>
           </div>
           <div class="details col-md-6">
             <h3 class="product-title">
-              {{ dataDetail?.name}}
+              {{ dataDetail?.name }}
             </h3>
             <div class="rating-star">
               <div class="rating">
@@ -49,28 +56,83 @@
               <br />
               <p class="review-no mt-3">41 Đánh giá</p>
             </div>
-            <span v-show="dataDetail?.sale_price > 0" class="text-decoration-line-through text-danger">{{ formatToVND(dataDetail?.price) }}</span>
-            <h4 class="price">Giá hiện tại: <span>{{ formatToVND(dataDetail?.sale_price ? dataDetail?.sale_price : dataDetail?.price) }}</span></h4>
+            <span
+              v-show="dataDetail?.sale_price > 0"
+              class="text-decoration-line-through text-danger"
+              >{{ formatToVND(dataDetail?.price) }}</span
+            >
+            <h4 class="price">
+              Giá hiện tại:
+              <span>{{
+                formatToVND(
+                  dataDetail?.sale_price
+                    ? dataDetail?.sale_price
+                    : dataDetail?.price
+                )
+              }}</span>
+            </h4>
             <p class="vote">
               <strong>91%</strong> người mua đã thích sản phẩm này
               <strong>(87 đánh giá)</strong>
             </p>
             <div class="choice-rom d-flex flex-nowrap mt-2 mb-3">
-              <span class="box03 group desk" v-for="(item, index) in dataDetail?.attributes" :key="index">
-                <div @click="load(item.id)" :style="{ background: item?.productAttribute.value, color: '#b36800' }" data-index="0" class="box03__item item">{{ item?.productAttribute.value }}</div>
+              <span
+                class="box03 group desk"
+                v-for="(item, index) in dataDetail?.attributes"
+                :key="index"
+              >
+                <div
+                  @click="updateIdAttributeIds(item.id)"
+                  :style="{
+                    background: item?.productAttribute.value,
+                    color: '#b36800',
+                  }"
+                  data-index="0"
+                  :class="[
+                    'box03__item',
+                    'item',
+                    {
+                      'border border-primary': pushIdAttributeIds.includes(
+                        item.id
+                      ),
+                    },
+                  ]"
+                >
+                  {{ item?.productAttribute.value }}
+                </div>
               </span>
             </div>
-           
-            <div class="action">
-              <button class="add-to-cart btn btn-default" type="button">
-                add to cart
-              </button>
-            </div>
+            <form @submit.prevent="addToCart">
+              <div class="d-flex">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-default-add-count"
+                >
+                  <i class="bi bi-plus-square"></i>
+                </button>
+                <input
+                  v-model="model.count"
+                  type="number"
+                  class="input-group w-25 mx-2 input_cart_base"
+                />
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-default-add-count"
+                >
+                  <i class="bi bi-eraser-fill"></i>
+                </button>
+              </div>
+              <div class="action mt-4">
+                <button class="add-to-cart btn btn-default" type="submit">
+                  add to cart
+                </button>
+              </div>
+            </form>
           </div>
         </div>
         <div class="mt-5 w-100 bg-white">
-            <h3 class="px-4 pt-5">Chi tiết sản phẩm</h3>
-            <p class="p-4" v-html="dataDetail?.description"></p>
+          <h3 class="px-4 pt-5">Chi tiết sản phẩm</h3>
+          <p class="p-4" v-html="dataDetail?.description"></p>
         </div>
       </div>
     </div>
@@ -93,53 +155,78 @@ import { toast } from "vue3-toastify";
 import { URL_API } from "@/constants/env";
 import { useStore } from "vuex";
 import TheHeader from "@/layout/TheHeader.vue";
-import { formatToVND } from '/src/components/helpers/format-to-vdn.js';
+import { formatToVND } from "/src/components/helpers/format-to-vdn.js";
 
-  const store = useStore();
-  const URL = ref(URL_API);
-  const router = useRouter();
-  const route = useRoute();
-  const check = ref(0);
+const store = useStore();
+const URL = ref(URL_API);
+const router = useRouter();
+const route = useRoute();
+const pushIdAttributeIds = ref([]);
 
-  const dataDetail = computed(() =>
-    store.getters["productRoot/getProductById"](Number(route.params.id))
-  );
+const model = reactive({
+  count: 0,
+  attributeIds: pushIdAttributeIds.value,
+});
 
-  const dataProductImage  = computed(() =>
-    store.getters["productImage/dataProductImage"]
-  );
+const dataDetail = computed(() =>
+  store.getters["productRoot/getProductById"](Number(route.params.id))
+);
 
-  const load = (value) => {
-    alert(value)
+const dataProductImage = computed(
+  () => store.getters["productImage/dataProductImage"]
+);
+
+const updateIdAttributeIds = (value) => {
+  const index = pushIdAttributeIds.value.indexOf(value);
+  if (index === -1) {
+    pushIdAttributeIds.value.push(value);
+  } else {
+    pushIdAttributeIds.value.splice(index, 1);
   }
+};
 
-  const updateActiveTab = (id) => {
-     const tabId = `pic-${id}`;
-     const tabPane = document.querySelector(`#${tabId}`);
-     console.log(tabPane);
-     if (tabPane) {
-        tabPane.classList.add('active');
-      }
+const addToCart = async () => {
+   console.log(model);
+};
+
+const updateActiveTab = (id) => {
+  const tabId = `pic-${id}`;
+  const tabPane = document.querySelector(`#${tabId}`);
+  console.log(tabPane);
+  if (tabPane) {
+    tabPane.classList.add("active");
   }
+};
 
-
-  onMounted( async () => {
-    const query = {
-      product_id: Number(route.params.id)
-    }
-    await store.dispatch("productRoot/productDetail", Number(route.params.id));
-    await store.dispatch("productImage/getAll", { params: query } );
-  })
-
+onMounted(async () => {
+  const query = {
+    product_id: Number(route.params.id),
+  };
+  await store.dispatch("productRoot/productDetail", Number(route.params.id));
+  await store.dispatch("productImage/getAll", { params: query });
+});
 </script>
 
 <style scoped>
 /* Globals */
-
+.btn-default-add-count {
+  border-radius: 0;
+}
+.action button {
+  font-size: 13px;
+  border-radius: 0;
+  width: 45%;
+}
+.btn-default-add-count i {
+  font-size: 18px;
+}
+.input_cart_base {
+  outline: none;
+}
 img {
   max-width: 100%;
 }
-.item-color-gray{
+.item-color-gray {
   width: 80px;
   height: 30px;
 }

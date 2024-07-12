@@ -2,10 +2,11 @@
   <div class="container">
     <div class="main">
       <h1>Đăng kí</h1>
-      <form action="" class="mt-4">
+      <form   @submit.prevent="userRegister" class="mt-4">
         <label for="first"> Nhập tên người dùng: </label>
         <input
           type="text"
+          v-model="model.user_name"
           id="first"
           name="first"
           placeholder="Nhập tên người dùng"
@@ -16,6 +17,7 @@
         <input
           type="password"
           id="password"
+          v-model="model.password"
           name="password"
           placeholder="Nhập mật khẩu"
           required
@@ -25,21 +27,22 @@
           type="email"
           id="email"
           name="email"
+          v-model="model.email"
           placeholder="Nhập email"
           required
         />
         <label for="password" class="mt-4"> Số điện thoại: </label>
         <input
-          type="password"
-          id="password"
+          type="text"
+         v-model="model.phone_number"
           class="mt-3"
-          name="password"
+          name="phone_number"
           placeholder="Nhập số điện thoại"
           required
         />
 
         <div class="wrap">
-          <button type="submit" onclick="solve()">Đăng kí</button>
+          <button type="submit" >Đăng kí</button>
         </div>
       </form>
       <p>
@@ -51,7 +54,43 @@
     </div>
   </div>
 </template>
-<script setup></script>
+<script setup>
+import {
+  defineComponent,
+  ref,
+  reactive,
+  watchEffect,
+  toRefs,
+  onMounted,
+  computed,
+} from "vue";
+
+import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
+import { toast } from "vue3-toastify";
+import { useStore } from "vuex";
+
+const store = useStore();
+const router = useRouter();
+const route = useRoute();
+
+const model = reactive({
+  user_name: "",
+  phone_number: "",
+  email:"",
+  password: ""
+});
+
+const userRegister = async () => {
+  await store.dispatch("auth/register", model)
+   router.push("/loginForm").then(() => {
+      toast.success(
+        `status: ${'200'}: Tạo tài khoản người dùng thành công !!`
+      );
+    });
+}
+
+</script>
 <style scoped>
 .container {
   height: 100vh;

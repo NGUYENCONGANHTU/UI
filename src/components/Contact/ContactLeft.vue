@@ -140,7 +140,7 @@ const validateForm = async () => {
       toast.success(
         `status: ${'200'}: Email: ${ model.value.email } đã phần hồi thành công, xin hay chờ phản hồi của hệ thống . Hệ thống cảm ơn khách hàng ${ model.value.name }  đã tin tưởng hệ thống !!`
       );
-    });;
+    });
     
   }
 };

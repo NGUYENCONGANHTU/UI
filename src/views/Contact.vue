@@ -1,6 +1,6 @@
 <template>
   <the-header />
-  <div class="container contact-page d-flex flex-nowrap vh-100">
+  <div class="container contact-page d-flex flex-nowrap">
     <ContactLeft />
     <ContactRight />
   </div>
