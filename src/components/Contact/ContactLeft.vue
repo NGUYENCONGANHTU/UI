@@ -2,97 +2,137 @@
   <div class="container">
     <h3 class="title-contact">Liên hệ</h3>
     <div class="row">
-      <div class="col-lg-6">
-        <div class="form-wrapper mb-5">
-          <label for="name1">Họ tên*</label>
-          <span class="wpcf7-form-control-wrap" data-name="text-858"
-            ><input
-              size="40"
-              class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required"
-              id="name1"
-              aria-required="true"
-              aria-invalid="false"
-              value=""
-              type="text"
-              name="text-858"
-          /></span>
+      <!-- ------------------ -->
+      <form @submit.prevent="validateForm">
+        <div class="col-lg-12">
+          <div class="form-wrapper mb-40">
+            <label for="email">Email*</label>
+            <span class="wpcf7-form-control-wrap" data-name="text-858">
+              <input
+                size="40"
+                class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required"
+                id="email"
+                aria-required="true"
+                aria-invalid="false"
+                v-model="modal.email"
+                type="text"
+                name="text-858"
+              />
+            </span>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-6 mb-5">
-        <div class="form-wrapper mb-40">
-          <label for="name1">Email*</label>
-          <span class="wpcf7-form-control-wrap" data-name="text-858"
-            ><input
-              size="40"
-              class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required"
-              id="name1"
-              aria-required="true"
-              aria-invalid="false"
-              value=""
-              type="text"
-              name="text-858"
-          /></span>
+        <span v-if="errors.email" class="error">{{ errors.email }}</span>
+        <!-- ------------------------- -->
+        <div class="col-lg-12 mt-4">
+          <div class="form-wrapper">
+            <label for="name">Họ tên*</label>
+            <span class="wpcf7-form-control-wrap" data-name="text-858">
+              <input
+                size="40"
+                class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required"
+                id="name"
+                aria-required="true"
+                aria-invalid="false"
+                v-model="modal.name"
+                type="text"
+                name="text-858"
+              />
+            </span>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-6 mb-5">
-        <div class="form-wrapper mb-40">
-          <label for="name1">Số điện thoại*</label>
-          <span class="wpcf7-form-control-wrap" data-name="text-858"
-            ><input
-              size="40"
-              class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required"
-              id="name1"
-              aria-required="true"
-              aria-invalid="false"
-              value=""
-              type="text"
-              name="text-858"
-          /></span>
+        <span v-if="errors.name" class="error">{{ errors.name }}</span>
+        <!-- ------------------------ -->
+        <div class="col-lg-12 mt-4">
+          <div class="form-wrapper">
+            <label for="phone">Số điện thoại*</label>
+            <span class="wpcf7-form-control-wrap" data-name="text-858">
+              <input
+                size="40"
+                class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required"
+                id="phone"
+                aria-required="true"
+                aria-invalid="false"
+                v-model="modal.phone"
+                type="text"
+                name="text-858"
+              />
+            </span>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-6 mb-4">
-        <div class="form-wrapper mb-4">
-          <label for="name1">Chủ đề*</label>
-          <span class="wpcf7-form-control-wrap" data-name="text-858"
-            ><input
-              size="40"
-              class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required"
-              id="name1"
-              aria-required="true"
-              aria-invalid="false"
-              value=""
-              type="text"
-              name="text-858"
-          /></span>
+        <span v-if="errors.phone" class="error">{{ errors.phone }}</span>
+        <!-- ------------------- -->
+        <div class="col-lg-12">
+          <div class="form-wrapper mt-4">
+            <label for="content">Nội dung</label>
+            <span class="wpcf7-form-control-wrap" data-name="textarea-27">
+              <textarea
+                cols="40"
+                rows="10"
+                class="text-area wpcf7-textarea"
+                aria-invalid="false"
+                v-model="modal.content"
+                name="textarea-27"
+              ></textarea>
+            </span>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-12 mb-4">
-        <div class="form-wrapper">
-          <label for="Subject1">Nội dung</label>
-          <span class="wpcf7-form-control-wrap" data-name="textarea-27">
-            <textarea
-              cols="40"
-              rows="10"
-              class="text-area wpcf7-textarea"
-              aria-invalid="false"
-              name="textarea-27"
-            ></textarea>
-          </span>
+        <span v-if="errors.content" class="error">{{ errors.content }}</span>
+
+        <!-- ----------------------- -->
+        <div class="col-lg-12 mt-4">
+          <button class="btn btn-success">Gửi</button>
         </div>
-      </div>
-      <div class="col-lg-12">
-        <button class="cta">
-          <span>Gửi</span>
-          <svg width="15px" height="10px" viewBox="0 0 13 10">
-            <path d="M1,5 L11,5"></path>
-            <polyline points="8 1 12 5 8 9"></polyline>
-          </svg>
-        </button>
-      </div>
+      </form>
     </div>
   </div>
 </template>
-<script setup></script>
+
+<script setup>
+import { ref } from "vue";
+
+const modal = ref({
+  name: "",
+  phone: "",
+  email: "",
+  content: "",
+});
+const errors = ref({});
+
+const validateForm = () => {
+  errors.value = {};
+
+  // --------name----------
+  if (!modal.value.name) {
+    errors.value.name = "* Vui lòng nhập họ tên !";
+  } else if (modal.value.name.length < 3) {
+    errors.value.name = "Tên đăng nhập phải có ít nhất 3 ký tự.";
+  }
+  // -------email---------
+  if (!modal.value.email) {
+    errors.value.email = "* Vui lòng nhập lại email !";
+  } else if (modal.value.email.length < 6) {
+    errors.value.email = "Email phải có ít nhất 6 ký tự.";
+  }
+  // --------phone-----------
+  if (!modal.value.phone) {
+    errors.value.phone = "* Vui lòng nhập lại số điện thoại !";
+  } else if (modal.value.phone.length !== 10) {
+    errors.value.phone = "Số điện thoại phải có 10 số !";
+  }
+  // --------content-----------
+  if (!modal.value.content) {
+    errors.value.content = "* Vui lòng nhập nội dung !";
+  } else if (modal.value.content.length <= 10) {
+    errors.value.content = "Nội dung phải trên 10 kí tự";
+  }
+
+  if (Object.keys(errors.value).length === 0) {
+    // Thực hiện hành động khi không có lỗi
+    console.log("Form đã được gửi thành công!");
+  }
+};
+</script>
+
 <style scoped>
 .container {
   margin-top: 20px;
@@ -127,61 +167,13 @@ input {
   border: 1px solid #bdbaba;
   padding: 14px 20px;
 }
-.cta {
-  position: relative;
-  margin: auto;
-  padding: 12px 18px;
-  transition: all 0.2s ease;
-  border: none;
-  background: none;
-  cursor: pointer;
+.btn {
+  padding: 8px 30px;
 }
-
-.cta:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  border-radius: 50px;
-  background: #b1dae7;
-  width: 45px;
-  height: 45px;
-  transition: all 0.3s ease;
-}
-
-.cta span {
-  position: relative;
-  font-family: "Ubuntu", sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #234567;
-}
-
-.cta svg {
-  position: relative;
-  top: 0;
-  margin-left: 10px;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke: #234567;
-  stroke-width: 2;
-  transform: translateX(-5px);
-  transition: all 0.3s ease;
-}
-
-.cta:hover:before {
-  width: 100%;
-  background: #b1dae7;
-}
-
-.cta:hover svg {
-  transform: translateX(0);
-}
-
-.cta:active {
-  transform: scale(0.95);
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: left;
 }
 </style>

@@ -115,6 +115,11 @@ import logo from "@/assets/logo/logo-Ci.png";
 .icon-cart {
   border: none;
 }
+.icon-cart a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
 .logo img {
   width: 210px;
 }
