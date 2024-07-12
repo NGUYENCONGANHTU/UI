@@ -21,7 +21,6 @@ const productRootStore = {
 
         setCakeData(state, data) {
             state.product = data
-            console.log(state.product);
         },
 
         addCakeProduct(state, newData) {

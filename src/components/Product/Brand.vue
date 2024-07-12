@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-4">
+  <div class="container my-5">
     <div class="row d-flex justify-content-between">
       <div
         class="brand col-lg-3 col-md-4 col-sm-6 d-flex justify-content-center"
