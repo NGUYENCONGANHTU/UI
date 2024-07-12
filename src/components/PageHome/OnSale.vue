@@ -10,38 +10,9 @@ import Iphbanner_on_sale_6 from "@/assets/OnSale/banner_on_sale_6.png";
   <div class="container d-flex justify-content-center">
     <div class="row w-100">
       <section>
-        <h3>KHUYẾN MẠI GIẢM GIÁ</h3>
+        <h3>SẢN PHẨM BÁN CHẠY</h3>
       </section>
-      <div class="col-lg-4 col-md-4 col-sm-12 py-3">
-        <div class="product item1 w-100">
-          <img :src="Iphbanner_on_sale_1" alt="" />
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-4 col-sm-12 py-3">
-        <div class="product item2">
-          <img :src="Iphbanner_on_sale_2" alt="" />
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-4 col-sm-12 py-3">
-        <div class="product item3">
-          <img :src="Iphbanner_on_sale_3" alt="" />
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-4 col-sm-12 py-3">
-        <div class="product item1 w-100">
-          <img :src="Iphbanner_on_sale_4" alt="" />
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-4 col-sm-12 py-3">
-        <div class="product item2">
-          <img :src="Iphbanner_on_sale_5" alt="" />
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-4 col-sm-12 py-3">
-        <div class="product item3">
-          <img :src="Iphbanner_on_sale_6" alt="" />
-        </div>
-      </div>
+      
     </div>
   </div>
 </template>
