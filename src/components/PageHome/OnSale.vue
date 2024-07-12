@@ -1,18 +1,31 @@
 <script setup>
-import Iphbanner_on_sale_1 from "@/assets/OnSale/banner_on_sale_1.png";
-import Iphbanner_on_sale_2 from "@/assets/OnSale/banner_on_sale_2.png";
-import Iphbanner_on_sale_3 from "@/assets/OnSale/banner_on_sale_3.png";
-import Iphbanner_on_sale_4 from "@/assets/OnSale/banner_on_sale_4.png";
-import Iphbanner_on_sale_5 from "@/assets/OnSale/banner_on_sale_5.png";
-import Iphbanner_on_sale_6 from "@/assets/OnSale/banner_on_sale_6.png";
+import { defineEmits, ref, defineProps, onMounted ,computed} from "vue";
+import { useStore } from "vuex";
+import { URL_API } from "@/constants/env";
+import Product from "../Product/Products.vue"
+
+// declare store
+const store = useStore();
+const URL = ref(URL_API)
+const data = computed(() => store.getters["productRoot/dataProduct"]);
+
+onMounted( async() => {
+  const query = {
+    sortPurchases: 'desc',
+    limit: 8
+  }
+  await store.dispatch("productRoot/getAll",{ params: query })
+})
 </script>
 <template>
-  <div class="container d-flex justify-content-center">
-    <div class="row w-100">
-      <section>
-        <h3>SẢN PHẨM BÁN CHẠY</h3>
-      </section>
-      
+  <div class="container">
+    <section>
+      <h3 class="pt-3 pb-5">SẢN PHẨM BÁN CHẠY</h3>
+    </section>
+    <div class="row" >
+        <div  class="col-12 col-sm-6 col-md-3" v-for="(item,index) in data" :key="index"> 
+          <product :data="item" :url="URL" />
+        </div>
     </div>
   </div>
 </template>
