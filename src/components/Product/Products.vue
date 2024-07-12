@@ -1,12 +1,12 @@
 <template>
   <div class="main-item">
-    <div class="cart-img">
+    <router-link :to="`/chi-tiet-san-pham/${props.data?.id}`" class="cart-img">
       <img
         :src="props.url + '/' +  props.data?.images "
         class="w-100 h-100 item-img border-bottom-0"
         alt="img "
       />
-    </div>
+    </router-link >
     <div class="border-top-0 p-3 height_item">
       <h6 class="py-2">{{ props.data?.name.length > 50 ? props.data?.name.substr(0, 50) + '...' : props.data?.name  }}</h6>
       <div class="d-flex align-items-center">

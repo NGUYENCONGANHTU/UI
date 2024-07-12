@@ -1,58 +1,31 @@
 <template>
-  <div class="container-fluid py-0">
-    <div class="title"><h1>Chi tiết sản phẩm</h1></div>
+  <the-header />
+  <div class="container-fluid py-3">
     <div class="card d-flex flex-column justify-content-start">
       <div class="container">
         <div class="wrapper row">
           <div class="preview col-md-6">
             <div class="preview-pic tab-content">
-              <div class="tab-pane active" id="pic-1">
-                <img src="http://placekitten.com/400/252" />
+              <div class="tab-pane active" :id="`pic-${dataDetail?.id}`">
+                <img :src="URL + '/' + dataDetail?.images " />
               </div>
-              <div class="tab-pane" id="pic-2">
-                <img src="http://placekitten.com/400/252" />
-              </div>
-              <div class="tab-pane" id="pic-3">
-                <img src="http://placekitten.com/400/252" />
-              </div>
-              <div class="tab-pane" id="pic-4">
-                <img src="http://placekitten.com/400/252" />
-              </div>
-              <div class="tab-pane" id="pic-5">
-                <img src="http://placekitten.com/400/252" />
+              <div v-for="(item,index) in dataProductImage " :key="index" class="tab-pane" :id="`pic-${ index + 1}`">
+                <img :src="URL + '/' + item?.file_name" />
               </div>
             </div>
             <ul class="preview-thumbnail nav nav-tabs">
-              <li class="active">
-                <a data-target="#pic-1" data-toggle="tab"
-                  ><img src="http://placekitten.com/200/126"
+
+              <li v-for="(item, index) in dataProductImage" :key="index" >
+                <a :data-target="`#pic-${item.id}`" :id="`#pic-${item.id}`" data-toggle="tab" @click="updateActiveTab(item.id)"
+                  ><img :src="URL + '/' + item?.file_name"
                 /></a>
               </li>
-              <li>
-                <a data-target="#pic-2" data-toggle="tab"
-                  ><img src="http://placekitten.com/200/126"
-                /></a>
-              </li>
-              <li>
-                <a data-target="#pic-3" data-toggle="tab"
-                  ><img src="http://placekitten.com/200/126"
-                /></a>
-              </li>
-              <li>
-                <a data-target="#pic-4" data-toggle="tab"
-                  ><img src="http://placekitten.com/200/126"
-                /></a>
-              </li>
-              <li>
-                <a data-target="#pic-5" data-toggle="tab"
-                  ><img src="http://placekitten.com/200/126"
-                /></a>
-              </li>
+              
             </ul>
           </div>
           <div class="details col-md-6">
             <h3 class="product-title">
-              Điện thoại Apple iPhone 15 Pro Max 256GB
+              {{ dataDetail?.name}}
             </h3>
             <div class="rating-star">
               <div class="rating">
@@ -76,35 +49,18 @@
               <br />
               <p class="review-no mt-3">41 Đánh giá</p>
             </div>
-            <p class="product-description">
-              Bộ sản phẩm bao gồm: • Điện thoại • Dây sạc • HDSD Bảo hành điện
-              tử 12 tháng.
-            </p>
-            <h4 class="price">Giá hiện tại: <span>40000000 vnd</span></h4>
+            <span v-show="dataDetail?.sale_price > 0" class="text-decoration-line-through text-danger">{{ formatToVND(dataDetail?.price) }}</span>
+            <h4 class="price">Giá hiện tại: <span>{{ formatToVND(dataDetail?.sale_price ? dataDetail?.sale_price : dataDetail?.price) }}</span></h4>
             <p class="vote">
               <strong>91%</strong> người mua đã thích sản phẩm này
               <strong>(87 đánh giá)</strong>
             </p>
             <div class="choice-rom d-flex flex-nowrap mt-2 mb-3">
-              <h5 class="ram-rom">Dung lượng:</h5>
-              <span class="box03 group desk">
-                <a href="" data-index="0" class="box03__item item">128GB</a>
-                <a href="" data-index="1" class="box03__item item">256GB</a>
-                <a href="" data-index="2" class="box03__item item">512GB</a>
-                <a href="" data-index="3" class="box03__item item act">1TB</a>
+              <span class="box03 group desk" v-for="(item, index) in dataDetail?.attributes" :key="index">
+                <div @click="load(item.id)" :style="{ background: item?.productAttribute.value, color: '#b36800' }" data-index="0" class="box03__item item">{{ item?.productAttribute.value }}</div>
               </span>
             </div>
-            <div class="choice-color">
-              <div class="colors d-flex">
-                <h5>Màu:</h5>
-                <div class="color d-flex">
-                  <a href="#" class="item color-gray"></a>
-                  <a href="#" class="item color-white"></a>
-                  <a href="#" class="item color-black"></a>
-                  <a href="#" class="item color-gold"></a>
-                </div>
-              </div>
-            </div>
+           
             <div class="action">
               <button class="add-to-cart btn btn-default" type="button">
                 add to cart
@@ -112,18 +68,80 @@
             </div>
           </div>
         </div>
+        <div class="mt-5 w-100 bg-white">
+            <h3 class="px-4 pt-5">Chi tiết sản phẩm</h3>
+            <p class="p-4" v-html="dataDetail?.description"></p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import {
+  defineComponent,
+  ref,
+  reactive,
+  watchEffect,
+  toRefs,
+  onMounted,
+  computed,
+} from "vue";
+import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
+import { toast } from "vue3-toastify";
+import { URL_API } from "@/constants/env";
+import { useStore } from "vuex";
+import TheHeader from "@/layout/TheHeader.vue";
+import { formatToVND } from '/src/components/helpers/format-to-vdn.js';
+
+  const store = useStore();
+  const URL = ref(URL_API);
+  const router = useRouter();
+  const route = useRoute();
+  const check = ref(0);
+
+  const dataDetail = computed(() =>
+    store.getters["productRoot/getProductById"](Number(route.params.id))
+  );
+
+  const dataProductImage  = computed(() =>
+    store.getters["productImage/dataProductImage"]
+  );
+
+  const load = (value) => {
+    alert(value)
+  }
+
+  const updateActiveTab = (id) => {
+     const tabId = `pic-${id}`;
+     const tabPane = document.querySelector(`#${tabId}`);
+     console.log(tabPane);
+     if (tabPane) {
+        tabPane.classList.add('active');
+      }
+  }
+
+
+  onMounted( async () => {
+    const query = {
+      product_id: Number(route.params.id)
+    }
+    await store.dispatch("productRoot/productDetail", Number(route.params.id));
+    await store.dispatch("productImage/getAll", { params: query } );
+  })
+
+</script>
 
 <style scoped>
 /* Globals */
 
 img {
   max-width: 100%;
+}
+.item-color-gray{
+  width: 80px;
+  height: 30px;
 }
 
 .preview {

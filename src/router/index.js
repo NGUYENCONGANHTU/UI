@@ -78,8 +78,8 @@ const router = createRouter({
       component: ShoppingContent,
     },
     {
-      path: "/productDetail",
-      name: "ProductDetail",
+      path: "/chi-tiet-san-pham/:id",
+      name: "chi-tiet-san-pham",
       component: ProductDetail,
     },
     {

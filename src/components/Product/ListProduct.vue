@@ -118,13 +118,13 @@
             :key="index"
           >
             <div class="main-item">
-              <div class="cart-img">
+               <router-link :to="`/chi-tiet-san-pham/${item?.id}`" class="cart-img">
                 <img
                   :src="URL + '/' + item?.images"
                   class="w-100 h-100 item-img border-bottom-0"
                   alt="img "
                 />
-              </div>
+              </router-link>
               <div class="border-top-0 p-3 height_item">
                 <h6 class="py-2" style="font-size: 13px">
                   {{
