@@ -14,6 +14,8 @@ import OrderContent from "@/components/Profile/ContentProfile/OrderContent.vue";
 import ShoppingContent from "@/components/Profile/ContentProfile/ShoppingContent.vue";
 import ProductDetail from "@/components/ProductDetail/ProductDetail.vue";
 import Trademark from "@/components/PagaTrademark/Trademark.vue";
+import { authenticatorLogin } from "@/middleware/middleware";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -46,11 +48,15 @@ const router = createRouter({
       path: "/shoppingCart",
       name: "ShoppingCart",
       component: ShoppingCart,
+      beforeEnter: authenticatorLogin,
+      meta: { requiresAuth: true },
     },
     {
       path: "/orderForm",
       name: "OrderForm",
       component: OrderForm,
+      beforeEnter: authenticatorLogin,
+      meta: { requiresAuth: true },
     },
     {
       path: "/signupForm",
@@ -66,16 +72,22 @@ const router = createRouter({
       path: "/infoContent",
       name: "InfoContent",
       component: InfoContent,
+      beforeEnter: authenticatorLogin,
+      meta: { requiresAuth: true },
     },
     {
       path: "/orderContent",
       name: "OrderContent",
       component: OrderContent,
+      beforeEnter: authenticatorLogin,
+      meta: { requiresAuth: true },
     },
     {
       path: "/shoppingContent",
       name: "ShoppingContent",
       component: ShoppingContent,
+      beforeEnter: authenticatorLogin,
+      meta: { requiresAuth: true },
     },
     {
       path: "/chi-tiet-san-pham/:id",
