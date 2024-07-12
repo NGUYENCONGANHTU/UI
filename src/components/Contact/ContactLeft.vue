@@ -14,7 +14,7 @@
                 id="email"
                 aria-required="true"
                 aria-invalid="false"
-                v-model="modal.email"
+                v-model="model.email"
                 type="text"
                 name="text-858"
               />
@@ -33,7 +33,7 @@
                 id="name"
                 aria-required="true"
                 aria-invalid="false"
-                v-model="modal.name"
+                v-model="model.name"
                 type="text"
                 name="text-858"
               />
@@ -52,7 +52,7 @@
                 id="phone"
                 aria-required="true"
                 aria-invalid="false"
-                v-model="modal.phone"
+                v-model="model.phone"
                 type="text"
                 name="text-858"
               />
@@ -70,7 +70,7 @@
                 rows="10"
                 class="text-area wpcf7-textarea"
                 aria-invalid="false"
-                v-model="modal.content"
+                v-model="model.content"
                 name="textarea-27"
               ></textarea>
             </span>
@@ -88,9 +88,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { defineEmits, ref, defineProps } from "vue"
+import { useStore } from "vuex";
+import { toast } from "vue3-toastify";
+import { useRouter } from "vue-router";
 
-const modal = ref({
+// declare store
+const store = useStore();
+ const router = useRouter();
+
+const model = ref({
   name: "",
   phone: "",
   email: "",
@@ -98,37 +105,43 @@ const modal = ref({
 });
 const errors = ref({});
 
-const validateForm = () => {
+const validateForm = async () => {
   errors.value = {};
 
   // --------name----------
-  if (!modal.value.name) {
+  if (!model.value.name) {
     errors.value.name = "* Vui lòng nhập họ tên !";
-  } else if (modal.value.name.length < 3) {
+  } else if (model.value.name.length < 3) {
     errors.value.name = "Tên đăng nhập phải có ít nhất 3 ký tự.";
   }
   // -------email---------
-  if (!modal.value.email) {
+  if (!model.value.email) {
     errors.value.email = "* Vui lòng nhập lại email !";
-  } else if (modal.value.email.length < 6) {
+  } else if (model.value.email.length < 6) {
     errors.value.email = "Email phải có ít nhất 6 ký tự.";
   }
   // --------phone-----------
-  if (!modal.value.phone) {
+  if (!model.value.phone) {
     errors.value.phone = "* Vui lòng nhập lại số điện thoại !";
-  } else if (modal.value.phone.length !== 10) {
+  } else if (model.value.phone.length <= 10) {
     errors.value.phone = "Số điện thoại phải có 10 số !";
   }
   // --------content-----------
-  if (!modal.value.content) {
+  if (!model.value.content) {
     errors.value.content = "* Vui lòng nhập nội dung !";
-  } else if (modal.value.content.length <= 10) {
+  } else if (model.value.content.length <= 10) {
     errors.value.content = "Nội dung phải trên 10 kí tự";
   }
 
   if (Object.keys(errors.value).length === 0) {
     // Thực hiện hành động khi không có lỗi
-    console.log("Form đã được gửi thành công!");
+    await store.dispatch("contact/createContact", model.value)
+     router.push("/").then(() => {
+      toast.success(
+        `status: ${'200'}: Email: ${ model.value.email } đã phần hồi thành công, xin hay chờ phản hồi của hệ thống . Hệ thống cảm ơn khách hàng ${ model.value.name }  đã tin tưởng hệ thống !!`
+      );
+    });;
+    
   }
 };
 </script>

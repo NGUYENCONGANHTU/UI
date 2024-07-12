@@ -32,10 +32,9 @@ const contactStore = {
           commit("isLoading", true);
           console.log(params);
           const response = await contactService.createContact(
-            `/api/admins/contact/store`,
+            `/api/users/home/post_contact`,
             params
           );
-          console.log(response);
           if (response) {
             commit("addCakeContact", response);
             commit("isLoading", false);

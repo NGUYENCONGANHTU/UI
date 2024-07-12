@@ -7,6 +7,7 @@ import trademarkStore from "./trademark.store";
 import bannerStore from "./banner.store";
 import contactStore from "./contact.store";
 import userStore from "./auth.store";
+import productImageStore from "./product_image.store";
 
 const store = createStore({
   modules: {
@@ -17,6 +18,7 @@ const store = createStore({
     category: categoryStore,
     trademark: trademarkStore,
     contact: contactStore,
+    productImage: productImageStore
   },
 });
 
