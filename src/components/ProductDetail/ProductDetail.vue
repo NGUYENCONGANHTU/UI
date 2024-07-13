@@ -192,14 +192,14 @@ const updateIdAttributeIds = (value) => {
 const addToCart = async () => {
   try {
     await store.dispatch("cart/createCart", model)
-      // router.push("/").then(() => {
-      //   toast.success(
-      //     `status: ${'200'}: Đăng nhập tài khoản thành công !!`
-      //   );
-      // });
+     router.push("/").then(() => {
+      toast.success(
+      `status: ${'200'}: Thêm vào giỏ hàng thành công !!`
+      );
+      });
   } catch (error) {
       toast.error(
-        `status: ${'500'}: Đăng nhập tài khoản không công !!`
+        `status: ${'500'}: Thêm vào giỏ hàng không thành công!!`
       );
   }
 };
